@@ -93,12 +93,6 @@ app.exec()
 
 ---
 
-## Example Screenshot
-
-*(Add a screenshot here showing a PySide6 window with a custom titlebar and rounded corners.)*
-
----
-
 ## License
 
 MIT License – Feel free to use, modify, and distribute.
