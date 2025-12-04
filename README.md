@@ -1,34 +1,50 @@
 # CustomQt
 
-CustomQt is a lightweight Python library that allows you to create **native custom titlebars on Windows** using **PySide6**. It provides frameless windows, custom hit-testing, rounded corners, and optional acrylic blur effects, while keeping the native window controls fully functional.
+**CustomQt** is a lightweight Python library for **PySide6** that enables **native-feeling custom titlebars and frameless windows**.  
+It currently supports **Windows**, with planned support for **Linux** and **macOS**.
+
+The goal of CustomQt is to provide a clean, customizable alternative to Qt’s default window chrome—**without losing native drag, resize, maximize, shadows, or system behaviors**.
 
 ---
 
-## Features
+## ✨ Features (Current & Planned)
 
-* Fully **frameless window** support on Windows.
-* Custom **titlebar hit-testing** for drag and resize.
-* **Rounded corners** compatible with Windows 11.
-* **Acrylic blur** effect for modern Windows aesthetics.
-* Automatic handling of **maximize, restore, and cursor states**.
-* Debounced corner updates to reduce flicker on resize.
-* Safe fallback to native title bar behavior.
+### ✔ Currently implemented (Windows)
+- Fully **frameless window** support  
+- Accurate **native hit-testing** (drag, resize, corners)  
+- **Rounded corners** with Windows 11 support  
+- Optional **Acrylic blur** / Mica effect  
+- Native handling of **maximize / restore / resize states**  
+- Debounced corner updates to reduce flicker  
+- Customizable titlebar fallback area  
+
+### 🚧 Planned (Linux / macOS)
+- Wayland-compatible client-side decorations  
+- X11 support using EWMH/NETWM hints  
+- GNOME/KDE-compatible shadows + resize edges  
+- macOS vibrancy & blending effects  
+- Cross-platform custom maximize/minimize buttons  
+- Unified API across all supported OSes  
 
 ---
 
-## Installation
+## 📦 Installation
 
-Install using pip (PySide6 is required):
+Install PySide6:
 
 ```bash
 pip install PySide6
 ```
 
-Then include CustomQt in your project (assuming you package it as `customqt`).
+Import CustomQt (once packaged):
+
+```python
+from customqt import WindowsStyler
+```
 
 ---
 
-## Usage
+## 🚀 Usage Example (Windows)
 
 ```python
 from PySide6.QtWidgets import QApplication, QWidget, QPushButton
@@ -39,17 +55,15 @@ app = QApplication([])
 window = QWidget()
 window.resize(800, 600)
 
-# Initialize the custom Windows styler
 styler = WindowsStyler(
     window,
-    titlebar_fallback=True,            # Enable fallback draggable area
-    titlebar_fallback_height=30,       # Height of fallback title bar
-    border_width=8,                    # Resizable border width
-    round_corner_radius=15             # Rounded corner radius
+    titlebar_fallback=True,
+    titlebar_fallback_height=30,
+    border_width=8,
+    round_corner_radius=15
 )
 styler.init()
 
-# Optional: connect your maximize button
 maximize_btn = QPushButton("⬜", window)
 styler.setTitlebarMaximizeButton(maximize_btn)
 
@@ -59,40 +73,69 @@ app.exec()
 
 ---
 
-## API
+## 🧩 API Reference
 
-### `WindowsStyler`
+### `WindowsStyler` (Windows)
 
-#### Parameters:
+#### **Parameters**
+- `window: QWidget`
+- `hittest_callback: Optional[Callable]`
+- `border_width: int = 8`
+- `titlebar_fallback: bool = True`
+- `titlebar_fallback_height: int = 30`
+- `round_corner_radius: int = 15`
 
-* `window: QWidget` – The target window to customize.
-* `hittest_callback: Optional[Callable[[QPoint], Optional[Tuple[bool, int]]]]` – Optional callback for custom hit-testing.
-* `border_width: int = 8` – Width of resizable window borders.
-* `titlebar_fallback: bool = True` – Enable fallback draggable titlebar.
-* `titlebar_fallback_height: int = 30` – Height of fallback draggable area.
-* `round_corner_radius: int = 15` – Radius for window rounded corners.
-
-#### Methods:
-
-* `init()` – Initialize the styler. Must be called before showing the window.
-* `setTitlebarMaximizeButton(button: QPushButton)` – Assign a maximize/restore button to update its state automatically.
-* `showMaximized()` – Maximize the window and remove rounded corners.
-* `showNormal()` – Restore the window and apply rounded corners.
-* `isMaximized() -> bool` – Check if the window is currently maximized.
-* `apply_rounded_corners()` – Manually apply rounded corners.
-* `enable_acrylic_blur()` – Enable acrylic blur behind the window.
-* `cleanup()` – Clean up resources (timers, cursor) when the window is destroyed.
+#### **Methods**
+- `init()`
+- `setTitlebarMaximizeButton(button)`
+- `showMaximized()`
+- `showNormal()`
+- `isMaximized() -> bool`
+- `apply_rounded_corners()`
+- `enable_acrylic_blur()`
+- `cleanup()`
 
 ---
 
-## Notes
+## 🖥️ Platform Support
 
-* **Platform:** Windows only. Attempting to use this library on other platforms will raise an error.
-* **Windows 11:** Automatically uses native rounded corners if available; otherwise falls back to manual rounding.
-* **Performance:** Debounced corner updates prevent excessive redrawing during resizing or snapping.
+### ✔ Windows — Supported
+The Windows implementation uses native APIs such as:
+- DWM (shadows, accents, blur)  
+- `WM_NCHITTEST` (resize/drag)  
+- DPI-aware frame metrics  
+- Rounded corner policies  
+
+### 🐧 Linux — Planned
+Linux support will require:
+- Wayland CSD protocols (xdg-decoration, ext-…)  
+- X11 EWMH hints, `_MOTIF_WM_HINTS`, `_NET_WM` sizing  
+- Handling KDE/Mutter differences  
+- Qt platform plugin integration  
+
+**Contributors with Linux WM knowledge are very welcome!**
+
+### 🍎 macOS — Future
+Planned features:
+- Vibrancy  
+- Titlebar blending  
+- Custom system button areas  
+- Resize semantics  
 
 ---
 
-## License
+## 💬 Contributing
 
-MIT License – Feel free to use, modify, and distribute.
+Contributions are welcome!  
+Especially from developers experienced in:
+- Wayland/X11 window manager internals  
+- Qt QPA platform plugins  
+- macOS window management APIs  
+
+Feel free to open issues, discussions, or PRs.
+
+---
+
+## 📄 License
+
+MIT License — free for personal and commercial use.
